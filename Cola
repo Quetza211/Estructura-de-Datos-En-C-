@@ -1,0 +1,64 @@
+#include<iostream>
+using namespace std;
+
+int frente = 0, atras = 0, dato, MAX = 5, cola[5];
+
+void insertar() {
+	if (atras==MAX) {
+		cout << "Cola llena" << endl;
+	}else {
+		cout << "Ingresa un numero: " << endl;
+		cin >> dato;
+		cola[atras] = dato;
+		atras = atras + 1;
+	}
+}
+int eliminar() {
+	if (atras==frente) {
+		cout << "Cola vacia" << endl;
+	}else {
+		cout << "Elemento eliminado" << endl;
+		dato = cola[frente];
+		frente = frente + 1;
+		return dato;
+	}
+}
+void mostrar() {
+	if (atras == 0) {
+		cout << "No hay nada que mostrar" << endl;
+	}
+	else {
+		cout << endl;
+		for (int i = frente;i < atras;i++) {
+			cout << cola[i] << endl;
+		}
+		cout << endl;
+	}
+}
+int main() {
+	int opc, aux = 0;
+	do {
+		cout << "1: Ingresar datos" << endl;
+		cout << "2: Eliminar datos" << endl;
+		cout << "3: Mostrar datos" << endl;
+		cin >> opc;
+		switch (opc) {
+		case 1:
+			insertar();
+			break;
+		case 2:
+			dato = eliminar();
+			break;
+		case 3:
+			mostrar();
+			break;
+		case 4:
+			aux = 1;
+			cout << "Ha salido con exito" << endl;
+			break;
+		default:
+			cout << "Numero incorrecto vuelva a escribir otro" << endl;
+			break;
+		}
+	} while (aux == 0);
+}
