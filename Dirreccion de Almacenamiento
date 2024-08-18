@@ -1,0 +1,10 @@
+#include <iostream>
+using namespace std;
+int main(){
+	int i, t;
+	cout << "Da el valor de t" << endl;
+	cin >> t;
+	cout << "Escribe un numero: " << endl;
+	cin >> i;
+	cout << "El Dir A: " << i << " es : " << t * (i);
+}
