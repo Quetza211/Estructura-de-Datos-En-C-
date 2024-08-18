@@ -1,0 +1,155 @@
+#include <iostream>
+#include <vector>
+#include <algorithm>
+using namespace std;
+
+struct arista {
+    int datoOrigen;
+    int datoDestino;
+    int peso;
+};
+
+struct vertice {
+    int datoOrigen;
+    vertice* sgteVertice;
+};
+
+class grafo {
+private:
+    vertice* pGrafo;
+    vector<arista> aristas;
+public:
+    grafo();
+    ~grafo();
+    void insertarVertice(int);
+    void insertarArista(int, int, int);
+    int sumarPesosAristas();
+    void KruskalMST();
+};
+
+grafo::grafo() {
+    pGrafo = NULL;
+}
+
+grafo::~grafo() {
+    vertice* p, * rp;
+    p = pGrafo;
+    while (p != NULL) {
+        rp = p;
+        p = p->sgteVertice;
+        delete rp;
+    }
+}
+
+void grafo::insertarVertice(int x) {
+    vertice* p;
+    p = new vertice;
+    p->datoOrigen = x;
+    p->sgteVertice = pGrafo;
+    pGrafo = p;
+}
+
+void grafo::insertarArista(int x, int y, int peso) {
+    // Agregar arista a la lista de aristas
+    aristas.push_back({ x, y, peso });
+}
+int grafo::sumarPesosAristas() {
+    int suma = 0;
+    for (const auto& a : aristas) {
+        suma += a.peso;
+    }
+    return suma;
+}
+
+// Encuentra el representante del conjunto de un elemento i
+int find(vector<int>& parent, int i) {
+    if (parent[i] == i) {
+        return i;
+    }
+    else {
+        return parent[i] = find(parent, parent[i]);
+    }
+}
+
+// Une dos subconjuntos x e y
+void Union(vector<int>& parent, vector<int>& rank, int x, int y) {
+    int rootX = find(parent, x);
+    int rootY = find(parent, y);
+    if (rank[rootX] < rank[rootY]) {
+        parent[rootX] = rootY;
+    }
+    else if (rank[rootX] > rank[rootY]) {
+        parent[rootY] = rootX;
+    }
+    else {
+        parent[rootY] = rootX;
+        rank[rootX]++;
+    }
+}
+
+// Implementación del algoritmo de Kruskal para encontrar el MST
+void grafo::KruskalMST() {
+    vector<arista> result;  // Vector para almacenar las aristas del MST
+    int V = 0;
+
+    // Contar el número de vértices en el grafo
+    for (vertice* p = pGrafo; p != NULL; p = p->sgteVertice) {
+        V++;
+    }
+
+    // Ordenar las aristas por peso en orden ascendente
+    sort(aristas.begin(), aristas.end(), [](arista a, arista b) {
+        return a.peso < b.peso;
+        });
+
+    // Crear estructuras para el conjunto disjunto
+    vector<int> parent(V);
+    vector<int> rank(V, 0);
+    for (int i = 0; i < V; i++) {
+        parent[i] = i;
+    }
+
+    // Procesar cada arista en orden ascendente de peso
+    for (auto& e : aristas) {
+        int x = find(parent, e.datoOrigen);
+        int y = find(parent, e.datoDestino);
+
+        // Si x y y no pertenecen al mismo conjunto, añadir la arista al MST
+        if (x != y) {
+            result.push_back(e);
+            Union(parent, rank, x, y);
+        }
+    }
+
+    // Imprimir las aristas en el MST
+    cout << "Aristas Finales: " << endl;
+    int mstWeight = 0;
+    for (auto& e : result) {
+        cout << e.datoOrigen << " -- " << e.datoDestino << " == " << e.peso << endl;
+        mstWeight += e.peso;
+    }
+    cout << "Peso total del MST: " << mstWeight << endl;
+}
+
+int main() {
+    grafo g;
+    int auxver = 0, auxaris, A1, A2, P1;
+    cout << "Cuantos vertices son: ";
+    cin >> auxver;
+    for (int i = 0;i < auxver;i++) {
+        g.insertarVertice(i);
+    }
+    cout << "Cuantas Aristas son: ";
+    cin >> auxaris;
+    for (int i = 0;i < auxaris;i++) {
+        cout << "Arista de _ a _ con valor de _ :";
+        cin >> A1 >> A2 >> P1;
+        g.insertarArista(A1, A2, P1);
+    }
+    int sumaPesos = g.sumarPesosAristas();
+    cout << "Suma de los pesos de las aristas: " << sumaPesos << endl;
+
+    g.KruskalMST();
+
+    return 0;
+}
