@@ -1,0 +1,75 @@
+#include <iostream>
+using namespace std;
+
+int  k[50], inf[50], sup[50], r[50];
+int n, dirE, t, rmul = 1;
+
+void voltear(int aux1[50]) {
+    for (int i = 0; i < n / 2; i++) {//Inversiones
+        int temp = aux1[i];
+        aux1[i] = aux1[n - i - 1];
+        aux1[n - i - 1] = temp;
+    }
+}
+void datos() {
+    cout << "Da el dalor de dirE" << endl;
+    cin >> dirE;
+    cout << "Da el valor de n" << endl;
+    cin >> n;
+    cout << "Da el valor de t" << endl;
+    cin >> t;
+    cout << "Escribe los " << n << " valores de la K" << endl;  //Da valor de K
+    for (int i = 0;i < n;i++) {// Valor de las K
+        cin >> k[i];
+    }
+    voltear(k);
+    cout << "Escribe los " << n << " valores de inf" << endl; //Da el valor de inf
+    for (int i = 0;i < n;i++) {// Valor de inf
+        cin >> inf[i];
+    }
+    voltear(inf);
+    cout << "Escribe los " << n << " valores de sup" << endl; //Da el valor de sup
+    for (int i = 0;i < n;i++) {// Valor de sup
+        cin >> sup[i];
+    }
+    voltear(sup);
+    for (int i = 0; i < n; i++) {//Se Comprueva los limites
+        if (inf[i] <= k[i] && k[i] <= sup[i]) {
+            cout << "Limites correctos" << endl;
+        }
+        else {
+            cout << "Limite incorrecto" << endl;
+            exit(0);
+        }
+    }
+    cout << "Valores de r : " << endl;
+    for (int i = 0;i < n - 1;i++) {// Valor de las r
+        r[i] = sup[i] - inf[i] + 1;
+        cout << r[i] << endl;
+    }
+}
+
+void valorR(int n1) {
+    //Ultimo valor de R (Tiene que disminuir r)
+    for (int i = 0;i < n1;i++) {// Valor de las r
+        rmul *= r[i];
+    }
+}
+
+int main() {
+    datos();
+    //Formula
+    int aux = 0, n1 = n - 1, j;
+    for (int i = 0, j = 0;i < n, j < n;i++, j++) {
+        valorR(n1);
+        if (n1 == 0) {
+            aux += (k[i] - inf[j]);
+        }
+        else {
+            aux += rmul * (k[i] - inf[j]);
+        }
+        n1 -= 1;
+        rmul = 1;
+    }
+    cout << "El tamanio es " << dirE + aux * t << endl;
+}
