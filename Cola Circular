@@ -1,0 +1,73 @@
+#include <iostream>
+using namespace std;
+int frente = 0, atras = 0, band = 0; //Checar band
+int cola[5], MAX = 5, dato;
+void insertar() {
+	if (frente==atras && band==1) {
+		cout << "Cola llena" << endl;
+	}else {
+		cout << "Ingresa un dato" << endl;
+		cin >> dato;
+		cola[atras] = dato;
+		atras = (atras + 1) % MAX;
+		band = 1;
+	}
+}
+
+int eliminar() {
+	if (frente == atras && band == 0) {
+		cout << "Cola Vacia" << endl;
+	}else {
+		dato = cola[frente];
+		frente = (frente + 1) % MAX;
+		band = 0;
+		return dato;
+	}
+}
+
+void mostrar() {
+	if (frente == atras && band == 0) {
+	}else {
+		int i = frente;
+		while (true) {
+			cout << cola[i] << " ";
+			if (i == atras && band == 0) {
+				break;
+			}
+			i = (i + 1) % MAX;
+			if (i == atras && band == 1) {
+				cout << cola[i] << " ";
+				break;
+			}
+		}
+		cout << endl;
+	}
+}
+
+int main() {
+	int opc;
+	do {
+		cout << "1: Ingresar Datos " << endl;
+		cout << "2: Eliminar Datos " << endl;
+		cout << "3: Mostrar Datos " << endl;
+		cout << "4: Salir" << endl;
+		cin >> opc;
+		switch (opc) {
+		case 1:
+			insertar();
+			break;
+		case 2:
+			dato=eliminar();
+			break;
+		case 3:
+			mostrar();
+			break;
+		case 4:
+			cout << "Salir" << endl;
+		default:
+			cout << "Numero incorrecto" << endl;
+			break;
+		}
+	} while (opc!=4);
+
+} 
